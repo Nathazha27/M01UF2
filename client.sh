@@ -18,17 +18,18 @@ echo "ERROR 1: Cabecera incorrecta"
 exit 1
 fi
 
-echo "4. ENVÍO FILE_NAME"
+echo "4. ENVÍO FILE_NAME y HASH"
 
 FILE_NAME="dragon.txt"
+FILE_HASH=$(echo -n "$FILE_NAME" | md5sum)
 
-echo "FILE_NAME $FILE_NAME" | nc localhost $PORT
+echo "FILE_NAME $FILE_NAME $FILE_HASH" | nc localhost $PORT
 
 DATA=`nc -l $PORT`
 
 if [ "$DATA" != "OK_FILE_NAME" ]
 then
-echo "ERROR 2: Prefijo incorrecto"
+echo "ERROR 2: File_Name incorrecto"
 exit 2
 fi
 
