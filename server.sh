@@ -34,7 +34,7 @@ echo "KO_PREFIX" | nc localhost $PORT
 exit 2
 fi
 
-FILE_HASH=$(echo -n "$FILE_NAME" | md5sum)
+FILE_HASH=$(echo -n "$FILE_NAME" | md5sum | cut -d " " -f 1)
 
 if [ "$FILE_NAME_MD5" != "$FILE_HASH" ]
 then
@@ -50,7 +50,7 @@ echo "7. Recibimos contenido archivo"
 
 CONTENIDO=`nc -l $PORT`
 
-echo $CONTENIDO > server/$FILE_NAME
+echo "$CONTENIDO" > server/$FILE_NAME
 
 echo "8. Comprobamso si el archivo está vacío"
 if [ ! -s server/$FILE_NAME ]
@@ -66,7 +66,7 @@ DATA=`nc -l $PORT`
 
 Prefix_MD5=`echo -n "$DATA" | cut -d " " -f 1`
 FILE_MD5=`echo -n "$DATA" | cut -d " " -f 2`
-HASH=`cat client/dragon.txt | md5sum`
+HASH=$(cat server/$FILE_NAME | md5sum | cut -d " " -f 1)
 
 echo "11. RECIBE Y COMPRUEBA PREFIJO Y MD5"
 
