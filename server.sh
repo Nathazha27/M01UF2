@@ -24,19 +24,30 @@ DATA=`nc -l $PORT`
 echo "5. RECIBO FILE_NAME"
 
 PREFIX=`echo "$DATA" | cut -d " " -f 1`
+FILE_NAME=`echo "$DATA" | cut -d " " -f 2`
+FILE_CLIENT_HASH=`echo "$DATA" | cut -d " " -f 3`
 
 if [ "$PREFIX" != "FILE_NAME" ]
 then
 echo "ERROR 2: Prefijo incorrecto"
-echo "KO_FILE_NAME" | nc localhost $PORT
+echo "KO_PREFIX" | nc localhost $PORT
 exit 2
+fi
+
+FILE_HASH=$(echo -n "$FILE_NAME" | md5sum)
+
+if [ "$FILE_CLIENT_HASH" != "$FILE_HASH" ]
+then
+echo "ERROR 3: Hash incorrecto"
+echo "KO_FILE_HASH" | nc localhost $PORT
+exit 3
 fi
 
 echo "OK_FILE_NAME" | nc localhost $PORT
 
 echo "7. Recibimos contenido archivo"
 
-FILE_NAME=`echo "$DATA" | cut -d " " -f 2`
+
 CONTENIDO=`nc -l $PORT`
 
 echo $CONTENIDO > server/$FILE_NAME
