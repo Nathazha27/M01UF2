@@ -18,7 +18,7 @@ echo "ERROR 1: Cabecera incorrecta"
 exit 1
 fi
 
-echo "4. ENVÍO FILE_NAME y HASH"
+echo "4. ENVÍO FILE_NAME"
 
 FILE_NAME="dragon.txt"
 FILE_HASH=$(echo -n "$FILE_NAME" | md5sum)
@@ -49,13 +49,13 @@ fi
 
 echo "10. ENVÍO MD5 DATOS"
 
-HASH=`cat client/$FILE_NAME | md5sum`
+MD5SUM=`cat client/$FILE_NAME | md5sum`
 
-echo "$HASH" | nc localhost $PORT
+echo "FILE_MD5 $MD5SUM" | nc localhost $PORT
 
 DATA=`nc -l $PORT`
 
-if [ "$DATA" != "OK_MD5" ]
+if [ "$DATA" != "OK_FILE_MD5" ]
 then
 echo "ERROR 4: Contenido incorrecto"
 exit 4
